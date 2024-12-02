@@ -61,6 +61,24 @@ def update_worksheet(data, worksheet):
     worksheet_to_update.append_row(data)
     print(f"{worksheet} worksheet updated successfully\n")
 
+def calculate_surplus_data(sales_row):
+    """
+    Compare sales with stock and calculate the surplus for each item type.
+    The surplus is defined as the sales figure subtracted from the stock:
+    -Positive surplus indicates waste
+    -Negative surplus indicates extra made when stock was sold out.
+    """
+    print("Calculating surplus data...\n")
+    stock = SHEET.worksheet("stock").get_all_values()
+    stock_row = stock[-1]
+
+    surplus_data = []
+    for stock, sales in zip(stock_row, sales_row):
+        surplus = int(stock) - sales
+        surplus_data.append(surplus)
+
+    return surplus_data
+
 def main():
     """
     Run all program functions
@@ -68,5 +86,7 @@ def main():
     data = get_sales_data()
     sales_data = [int(num) for num in data] 
     update_worksheet(sales_data, "sales")
+    new_surplus_data = calculate_surplus_data(sales_data)
 
+print ("Welcome to Love Sandwiches Data Automation")
 main()
